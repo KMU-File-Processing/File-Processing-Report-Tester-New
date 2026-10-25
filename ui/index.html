@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FP-Judge</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="bar">
+  <div class="brand">
+    <span class="mark" aria-hidden="true"></span>
+    <h1>FP-Judge</h1>
+    <span class="sub">화일처리 레포트 채점기</span>
+  </div>
+  <nav class="modes" role="tablist">
+    <button id="tab-ta" class="mode on" role="tab" aria-selected="true">조교 채점</button>
+    <button id="tab-student" class="mode" role="tab" aria-selected="false">모의 채점</button>
+  </nav>
+</header>
+
+<main>
+  <!-- ============================ 조교 모드 ============================ -->
+  <section id="view-ta" class="view">
+    <div class="controls">
+      <div class="field">
+        <label for="ta-project">과제</label>
+        <select id="ta-project"></select>
+      </div>
+      <div class="field grow">
+        <label for="ta-folder">제출 폴더</label>
+        <div class="pathrow">
+          <input id="ta-folder" type="text" placeholder="폴더를 선택하세요" spellcheck="false">
+          <button id="ta-pick" class="ghost">찾기</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="ta-compiler">컴파일러</label>
+        <select id="ta-compiler"></select>
+      </div>
+      <div class="field narrow">
+        <label for="ta-workers">동시 실행</label>
+        <input id="ta-workers" type="number" min="1" max="16" value="4">
+      </div>
+      <div class="field check">
+        <label><input id="ta-leak" type="checkbox" checked> 누수 검사</label>
+      </div>
+      <button id="ta-run" class="primary">채점 시작</button>
+      <button id="ta-export" class="ghost" disabled>결과 저장</button>
+    </div>
+
+    <div id="ta-notice" class="notice hidden"></div>
+
+    <div id="ta-progress" class="progress hidden">
+      <div class="track"><div class="fill"></div></div>
+      <span class="count"></span>
+    </div>
+
+    <div id="ta-empty" class="empty">
+      <p>제출 폴더를 고르고 채점을 시작하세요.</p>
+      <p class="dim">파일명은 e-class에서 받은 그대로 두어도 됩니다. 학번과 이름을 알아서 읽고,
+         같은 학생이 여러 번 냈으면 가장 최근 파일만 채점합니다.</p>
+    </div>
+
+    <div id="ta-results" class="results hidden">
+      <div class="tablewrap">
+        <table id="ta-table">
+          <thead>
+            <tr>
+              <th data-sort="student_id" class="sortable">학번</th>
+              <th data-sort="name" class="sortable">이름</th>
+              <th data-sort="compile" class="sortable">컴파일</th>
+              <th data-sort="simple" class="sortable">simple</th>
+              <th data-sort="random" class="sortable">random</th>
+              <th data-sort="leak" class="sortable">누수</th>
+              <th data-sort="score" class="sortable num">점수</th>
+              <th class="ribbon-head">케이스별 결과</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div id="ta-detail" class="detail"></div>
+    </div>
+  </section>
+
+  <!-- ============================ 학생 모드 ============================ -->
+  <section id="view-student" class="view hidden">
+    <div class="controls">
+      <div class="field">
+        <label for="st-project">과제</label>
+        <select id="st-project"></select>
+      </div>
+      <div class="field grow">
+        <label for="st-file">내 소스 파일</label>
+        <div class="pathrow">
+          <input id="st-file" type="text" placeholder=".c 또는 .cpp 파일을 선택하세요" spellcheck="false">
+          <button id="st-pick" class="ghost">찾기</button>
+        </div>
+      </div>
+      <button id="st-run" class="primary">테스트 실행</button>
+    </div>
+
+    <div id="st-notice" class="notice hidden"></div>
+
+    <div id="st-progress" class="progress hidden">
+      <div class="track"><div class="fill"></div></div>
+      <span class="count">컴파일하고 실행하는 중입니다</span>
+    </div>
+
+    <div id="st-empty" class="empty">
+      <p>소스 파일을 고르고 테스트를 실행하세요.</p>
+      <p class="dim">공개 테스트케이스로만 돌려봅니다. 실제 점수는 나오지 않습니다.
+         틀린 케이스는 입력을 복사해서 직접 디버깅해 보세요.</p>
+    </div>
+
+    <div id="st-result" class="student-result hidden"></div>
+  </section>
+</main>
+
+<!-- 파일/폴더 선택기 -->
+<div id="picker" class="picker hidden" role="dialog" aria-modal="true" aria-label="파일 선택">
+  <div class="picker-box">
+    <div class="picker-head">
+      <strong id="picker-title">폴더 선택</strong>
+      <button id="picker-close" class="ghost small">닫기</button>
+    </div>
+    <div class="picker-path"><input id="picker-input" type="text" spellcheck="false"><button id="picker-go" class="ghost small">이동</button></div>
+    <div id="picker-roots" class="picker-roots"></div>
+    <ul id="picker-list" class="picker-list"></ul>
+    <div class="picker-foot">
+      <span id="picker-hint" class="dim"></span>
+      <button id="picker-choose" class="primary small">이 폴더 선택</button>
+    </div>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>

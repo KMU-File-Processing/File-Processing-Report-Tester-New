@@ -1,0 +1,17 @@
+# 빌드 산출물 — 실행 파일은 Releases 로 배포한다
+dist/
+build/
+_stage/
+*.spec
+*.exe
+
+# 조교용 자료가 실수로 들어오지 못하게 막는다
+testdata/*/hidden/
+testdata/manifest.json
+결과/
+
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store

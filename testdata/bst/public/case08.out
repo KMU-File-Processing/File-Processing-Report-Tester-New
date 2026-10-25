@@ -1,0 +1,40 @@
+d 8: The key does not exist
+< 4 >
+d 11: The key does not exist
+< 4 < 7 >>
+<< 1 > 4 < 7 >>
+d 6: The key does not exist
+d 9: The key does not exist
+<< 1 > 4 < 7 < 10 >>>
+<< 1 > 4 < 7 < 10 < 12 >>>>
+<< 1 > 7 < 10 < 12 >>>
+<< 1 > 7 << 8 > 10 < 12 >>>
+<< 1 < 2 >> 7 << 8 > 10 < 12 >>>
+d 9: The key does not exist
+i 1: The key already exists
+<< 1 < 2 >> 7 << 8 > 10 >>
+<< 2 > 7 << 8 > 10 >>
+d 4: The key does not exist
+d 12: The key does not exist
+d 11: The key does not exist
+<< 2 < 5 >> 7 << 8 > 10 >>
+d 3: The key does not exist
+d 12: The key does not exist
+i 2: The key already exists
+i 5: The key already exists
+i 2: The key already exists
+<< 2 > 7 << 8 > 10 >>
+<< 2 < 4 >> 7 << 8 > 10 >>
+<<< 1 > 2 < 4 >> 7 << 8 > 10 >>
+<<< 1 > 2 < 4 >> 7 << 8 < 9 >> 10 >>
+i 4: The key already exists
+d 12: The key does not exist
+i 4: The key already exists
+<<< 1 > 2 < 4 >> 7 < 8 < 9 >>>
+d 12: The key does not exist
+<<< 1 > 2 < 4 >> 7 < 8 < 9 < 10 >>>>
+<<< 1 > 2 < 4 >> 7 < 8 < 9 < 10 < 12 >>>>>
+<<< 1 > 2 < 4 >> 7 < 9 < 10 < 12 >>>>
+i 9: The key already exists
+i 7: The key already exists
+<<< 1 > 2 < 4 >> 7 < 10 < 12 >>>

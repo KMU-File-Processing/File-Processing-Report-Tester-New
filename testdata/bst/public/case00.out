@@ -1,0 +1,12 @@
+< 6 >
+<< 3 > 6 >
+d 5: The key does not exist
+d 1: The key does not exist
+<< 3 > 6 < 7 >>
+d 4: The key does not exist
+<<< 2 > 3 > 6 < 7 >>
+i 3: The key already exists
+d 4: The key does not exist
+<<< 2 > 3 > 6 < 7 < 8 >>>
+<<< 2 > 3 > 6 < 7 >>
+<<< 2 > 3 < 4 >> 6 < 7 >>

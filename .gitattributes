@@ -1,0 +1,12 @@
+# Normalise text files by default
+* text=auto
+
+# cmd.exe needs CRLF batch files
+*.bat text eol=crlf
+
+# Test data must stay byte-identical: expected output is compared as-is
+testdata/** -text
+
+# Headers injected into submissions: keep LF everywhere
+*.h   text eol=lf
+*.hpp text eol=lf
