@@ -1,20 +1,12 @@
-< 2 >
-< 2 < 5 >>
-i 5: The key already exists
-i 5: The key already exists
-i 5: The key already exists
-i 2: The key already exists
-i 5: The key already exists
-< 2 << 3 > 5 >>
-i 5: The key already exists
-<< 1 > 2 << 3 > 5 >>
-<< 1 > 2 << 3 < 4 >> 5 >>
-i 1: The key already exists
-i 4: The key already exists
-i 2: The key already exists
-i 3: The key already exists
-i 1: The key already exists
-i 5: The key already exists
-i 4: The key already exists
-i 3: The key already exists
-i 4: The key already exists
+< 6 >
+d 4: The key does not exist
+d 7: The key does not exist
+d 3: The key does not exist
+i 6: The key already exists
+<< 2 > 6 >
+<< 2 < 5 >> 6 >
+d 3: The key does not exist
+<< 2 > 6 >
+d 8: The key does not exist
+d 4: The key does not exist
+d 4: The key does not exist

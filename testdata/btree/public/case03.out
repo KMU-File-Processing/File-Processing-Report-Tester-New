@@ -1,24 +1,20 @@
-< 15 >
-< 13 15 >
-< 2 13 15 >
-<< 2 13 > 15 < 28 >>
-<< 1 2 13 > 15 < 28 >>
-<< 1 2 13 > 15 < 16 28 >>
-<< 1 2 13 > 15 < 16 24 28 >>
-<< 1 2 13 > 15 < 16 20 > 24 < 28 >>
-d 58: The key does not exist
-d 49: The key does not exist
-d 57: The key does not exist
-d 45: The key does not exist
-d 41: The key does not exist
-d 55: The key does not exist
-d 42: The key does not exist
-d 46: The key does not exist
-<< 1 2 13 > 16 < 20 > 24 < 28 >>
-<< 1 2 > 16 < 20 > 24 < 28 >>
-<< 1 > 16 < 20 > 24 < 28 >>
-<< 1 > 16 < 20 24 >>
-<< 16 > 20 < 24 >>
-< 20 24 >
-< 20 >
-
+< 2 >
+i 2: The key already exists
+< 2 3 >
+i 2: The key already exists
+i 3: The key already exists
+< 2 3 4 >
+<< 1 2 > 3 < 4 >>
+i 1: The key already exists
+i 2: The key already exists
+<< 1 2 > 3 < 4 5 >>
+i 2: The key already exists
+i 1: The key already exists
+i 1: The key already exists
+i 2: The key already exists
+i 4: The key already exists
+i 5: The key already exists
+i 2: The key already exists
+i 1: The key already exists
+i 1: The key already exists
+i 3: The key already exists
