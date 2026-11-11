@@ -13,6 +13,12 @@
  * Because this header is inserted first, the reporter object is constructed
  * before any global object in the submission and therefore destroyed after
  * it. Destructors of a global tree run before the count is taken.
+ *
+ * File format: "<remaining> <stdio_unsynced>"
+ *   stdio_unsynced is 1 when the program called ios_base::sync_with_stdio(false).
+ *   libstdc++ then allocates stream buffers for cin/cout/cerr (and the wide
+ *   versions) that it never frees, so the count is non-zero even for a correct
+ *   program. The engine subtracts that runtime baseline (see judge.py).
  */
 #ifndef FPJUDGE_LEAKCHECK_HPP
 #define FPJUDGE_LEAKCHECK_HPP
@@ -20,6 +26,7 @@
 #include <cstddef>
 #include <cstdio>
 #include <cstdlib>
+#include <ios>
 #include <new>
 
 namespace fpjudge_leak {
@@ -33,9 +40,14 @@ struct Reporter {
     ~Reporter() {
         const char* path = std::getenv("FPJUDGE_LEAK_FILE");
         if (path == nullptr) return;
+        // Read the counter first: the query below must not affect it.
+        long long remaining = counter();
+        // sync_with_stdio(true) only reports the current state here. Turning sync
+        // back on is a no-op in libstdc++ and harmless at exit elsewhere.
+        bool synced = std::ios_base::sync_with_stdio(true);
         std::FILE* f = std::fopen(path, "w");
         if (f == nullptr) return;
-        std::fprintf(f, "%lld\n", counter());
+        std::fprintf(f, "%lld %d\n", remaining, synced ? 0 : 1);
         std::fclose(f);
     }
 };

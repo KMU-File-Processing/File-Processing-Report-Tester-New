@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import shutil
 import tempfile
+import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -101,6 +102,59 @@ def first_diff(actual: str, expected: str, context: int = 3) -> dict | None:
                     "actual_lines": _line_count(a),
                     "expected_lines": _line_count(b)}
     return None
+
+
+# ------------------------------------------------------------------ leak baseline
+
+def read_leak_file(path: Path) -> tuple[int, bool]:
+    """Parse the tracker output: (remaining allocations, stdio unsynced).
+
+    The C tracker and older C++ trackers write only the count.
+    """
+    parts = path.read_text().split()
+    return int(parts[0]), len(parts) > 1 and parts[1] == "1"
+
+
+_STDIO_PROBE = ("#include <iostream>\n"
+                "int main() { std::ios_base::sync_with_stdio(false); return 0; }\n")
+_stdio_baseline: dict[str, int] = {}
+_stdio_lock = threading.Lock()
+
+
+def stdio_baseline(compiler: toolchain.Compiler) -> int:
+    """Allocations the C++ runtime itself leaves live after sync_with_stdio(false).
+
+    libstdc++ (MinGW, Linux g++) swaps in stdio_filebuf objects whose internal
+    buffers (cin/cout/cerr, narrow and wide: 6 on GCC 16) are never freed. A
+    correct submission that only adds `ios::sync_with_stdio(false)` for fast I/O
+    was reported as leaking. The original macOS `leaks` tool did not count such
+    buffers because they stay reachable from the runtime's static storage.
+
+    Measured once per compiler with a one-line probe built exactly like a
+    submission, so it follows whatever runtime is in use (0 where none leaks).
+    """
+    key = compiler.cxx
+    with _stdio_lock:
+        if key in _stdio_baseline:
+            return _stdio_baseline[key]
+        n = 0
+        tmp = toolchain.ascii_safe_tempdir()
+        try:
+            src = tmp / "stdio_probe.cpp"
+            src.write_text(_STDIO_PROBE, encoding="utf-8")
+            cr = toolchain.compile_submission(compiler, src, tmp, want_leak_build=True)
+            if cr.ok and cr.leak_exe is not None:
+                leak_file = tmp / "leak.txt"
+                rr = runner.run_case(cr.leak_exe, "", timeout=10.0, memory_mb=512, cwd=tmp,
+                                     env_extra={"FPJUDGE_LEAK_FILE": str(leak_file)})
+                if not rr.timed_out and not rr.verdict:
+                    n = max(0, read_leak_file(leak_file)[0])
+        except Exception:
+            n = 0       # no correction: same behaviour as before this fix
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+        _stdio_baseline[key] = n
+        return n
 
 
 # ------------------------------------------------------------------ grading
@@ -252,9 +306,11 @@ def grade_one(source: Path, cases: list[TestCase], compiler: toolchain.Compiler,
                 if rr.timed_out or rr.verdict:
                     continue
                 try:
-                    remaining = int(leak_file.read_text().strip())
+                    remaining, unsynced = read_leak_file(leak_file)
                 except Exception:
                     continue
+                if unsynced:   # runtime-owned stream buffers are not the student's leak
+                    remaining -= stdio_baseline(compiler)
                 if remaining > 0:
                     leaked = True
                     break
