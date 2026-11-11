@@ -20,8 +20,8 @@ PROJECTS = {
 POINTS_SIMPLE = 8       # per simple case
 POINTS_RANDOM = 2       # per random case
 LEAK_PENALTY = 20       # deduction when a leak is detected
-FINAL_BASE = 30.0       # final = FINAL_BASE + FINAL_SCALE * raw
-FINAL_SCALE = 0.7
+FINAL_BASE = 20.0       # final = FINAL_BASE + FINAL_SCALE * raw
+FINAL_SCALE = 0.8
 
 
 # ------------------------------------------------------------------ test data
